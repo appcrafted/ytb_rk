@@ -1,0 +1,127 @@
+{
+  "project_info": {
+    "project_number": "237650178391",
+    "firebase_url": "https://signoui-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "signoui",
+    "storage_bucket": "signoui.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:237650178391:android:3c00f3337653c3a5cf8e12",
+        "android_client_info": {
+          "package_name": "com.android.signoui"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "237650178391-2196nb84v2qinrs9affm7954d851bcjd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUE6mkwUSTqA-MCvIRFE7-26DfXzPksXw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "237650178391-2196nb84v2qinrs9affm7954d851bcjd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:237650178391:android:6cc8bfe87925400ccf8e12",
+        "android_client_info": {
+          "package_name": "org.schabi.newpipe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "237650178391-2196nb84v2qinrs9affm7954d851bcjd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUE6mkwUSTqA-MCvIRFE7-26DfXzPksXw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "237650178391-2196nb84v2qinrs9affm7954d851bcjd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:237650178391:android:1947f4bdcd2eca6acf8e12",
+        "android_client_info": {
+          "package_name": "org.schabi.newpipe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "237650178391-2196nb84v2qinrs9affm7954d851bcjd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUE6mkwUSTqA-MCvIRFE7-26DfXzPksXw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "237650178391-2196nb84v2qinrs9affm7954d851bcjd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:237650178391:android:f31fd5bc41dbe935cf8e12",
+        "android_client_info": {
+          "package_name": "org.schabi.newpipe.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "237650178391-2196nb84v2qinrs9affm7954d851bcjd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUE6mkwUSTqA-MCvIRFE7-26DfXzPksXw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "237650178391-2196nb84v2qinrs9affm7954d851bcjd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
