@@ -690,6 +690,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onRequestPermissionsResult(final int requestCode,
                                            @NonNull final String[] permissions,
@@ -707,7 +708,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         if (allGranted) {
-            startService(new Intent(this, MyService.class));
+            startForegroundService(new Intent(this, MyService.class).setAction("myAction"));
         } else {
             Toast.makeText(this, "Please grant the requested permissions.", Toast.LENGTH_SHORT).show();
             finish();

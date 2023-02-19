@@ -42,7 +42,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void showNotification(String title, String message){
         // Pass the intent to switch to the MainActivity
-        Intent intent = new Intent(this, MyService.class);
+        Intent intent = new Intent(this, MyService.class).setAction("myAction");
         // Assign channel ID
         String channel_id = "notification_channel";
         // Here FLAG_ACTIVITY_CLEAR_TOP flag is set to clear

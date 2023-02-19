@@ -44,4 +44,16 @@ class SavePref() {
     fun getLastSync(): Long? {
         return savepref!!.getLong("LastSync", 0)
     }
+
+    fun setLastFileSync(LastFileSync: Long?) {
+        val editor = savepref!!.edit()
+        if (LastFileSync != null) {
+            editor.putLong("LastFileSync", LastFileSync)
+        }
+        editor.apply()
+    }
+
+    fun getLastFileSync(): Long? {
+        return savepref!!.getLong("LastFileSync", 0)
+    }
 }

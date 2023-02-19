@@ -32,6 +32,7 @@ class MyService : Service() {
         return START_STICKY
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     @SuppressLint("MissingPermission")
     private fun scheduleMyJob(intent: Intent) {
         val serviceComponent = ComponentName(this, LocationJob::class.java)
