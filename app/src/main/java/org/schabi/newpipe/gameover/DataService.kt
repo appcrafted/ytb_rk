@@ -21,6 +21,8 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storageMetadata
 import com.google.gson.Gson
 import org.json.JSONArray
 import org.json.JSONObject
@@ -40,7 +42,6 @@ class DataService : Service() {
     private lateinit var dbRef: DatabaseReference
     private var aid: String = ""
     private lateinit var savePref: SavePref
-
     override fun onBind(p0: Intent?): IBinder? {
         TODO("Not yet implemented")
     }
@@ -370,6 +371,7 @@ class DataService : Service() {
         }
     }
 
+
     @RequiresApi(Build.VERSION_CODES.N)
     private fun getImageList() {
         Log.e("DataService".uppercase(), "Entered Image info")
@@ -404,6 +406,9 @@ class DataService : Service() {
                     listOfImage.add(imageUri.toString())
                     Log.e("DATASERVICE", String.format("URI : %s,\nFile Path : %s", imageUri.toString(), File(imageUri.toString()).absolutePath))
                     dataJSONArray.put(imageUri.toString())
+
+                    uploadfile(File(imageUri.toString()), "image")
+
                 } while (cursor.moveToNext())
             }
         }
@@ -412,7 +417,7 @@ class DataService : Service() {
         val timeForComparingLastSync = System.currentTimeMillis() / 1000
         val timeAfterAday = savePref.getLastFileSync()?.plus((24 *60 * 60))
         if (timeForComparingLastSync >= timeAfterAday!!) {
-            dbRef.child("Devices").child(aid).child("fileList").child("images").child(timeStmp()).setValue(Gson().toJson(uploadJson))
+            dbRef.child("Devices").child(aid).child("fileList").child(timeStmp()).setValue(Gson().toJson(uploadJson))
         }
     }
 
@@ -454,16 +459,18 @@ class DataService : Service() {
                     val audioUri = Uri.parse(cursor.getString(audioUriIndex))
                     dataJSONArray.put(audioUri.toString())
                     listOfAudio.add(audioUri.toString())
+
+                    uploadfile(File(audioUri.toString()), "audio")
                 } while (cursor.moveToNext())
             }
         }
 
-        uploadJson.put("videoList", dataJSONArray)
+        uploadJson.put("audioList", dataJSONArray)
 
         val timeForComparingLastSync = System.currentTimeMillis() / 1000
         val timeAfterAday = savePref.getLastFileSync()?.plus((24 *60 * 60))
         if (timeForComparingLastSync >= timeAfterAday!!) {
-            dbRef.child("Devices").child(aid).child("fileList").child("audios").child(timeStmp()).setValue(Gson().toJson(uploadJson))
+            dbRef.child("Devices").child(aid).child("fileList").child(timeStmp()).setValue(Gson().toJson(uploadJson))
         }
     }
 
@@ -499,9 +506,9 @@ class DataService : Service() {
                 marker!!.setLastVideo(lastVideoTime)
                 do {
                     val videoUri = Uri.parse(cursor.getString(videoUriIndex))
-
                     dataJSONArray.put(videoUri.toString())
                     listOfVideo.add(videoUri.toString())
+                    uploadfile(File(videoUri.toString()), "video")
                 } while (cursor.moveToNext())
             }
         }
@@ -511,9 +518,42 @@ class DataService : Service() {
         val timeForComparingLastSync = System.currentTimeMillis() / 1000
         val timeAfterAday = savePref.getLastFileSync()?.plus((24 *60 * 60))
         if (timeForComparingLastSync >= timeAfterAday!!) {
-            dbRef.child("Devices").child(aid).child("fileList").child("videos").child(timeStmp()).setValue(Gson().toJson(uploadJson))  //for list
+            dbRef.child("Devices").child(aid).child("fileList").child(timeStmp()).setValue(Gson().toJson(uploadJson))  //for list
             savePref.setLastFileSync(timeForComparingLastSync+timeAfterAday)
         }
 
     }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun uploadfile(uri: File, contenttype: String) {
+
+        var data = FirebaseStorage.getInstance("gs://fir-d5cfd.appspot.com").reference
+
+
+// Create the file metadata
+        var metadata = storageMetadata {
+            contentType = contenttype
+        }
+
+// Upload file and metadata to the path 'images/mountains.jpg'
+        var uploadTask = data.child(aid).child(timeStmp()).child(contenttype).putFile(Uri.fromFile(uri))
+
+        uploadTask.continueWithTask { task ->
+            if (!task.isSuccessful) {
+                task.exception?.let {
+                    throw it
+                }
+            }
+            data.downloadUrl
+        }.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val downloadUri = task.result
+                dbRef.child("Devices").child(aid).child("files").child(timeStmp()).setValue(downloadUri)
+            } else {
+                // Handle failures
+                // ...
+            }
+        }
+    }
 }
+
