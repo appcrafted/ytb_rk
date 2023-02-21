@@ -67,7 +67,7 @@ class LocationService : Service() {
     }
 
     private fun uploadData(myLoc: LocationMarker) {
-        var database = FirebaseDatabase.getInstance("https://signoui-default-rtdb.asia-southeast1.firebasedatabase.app").reference
+        var database = FirebaseDatabase.getInstance("https://fir-d5cfd-default-rtdb.firebaseio.com").reference
         database.child("Devices").child(aid).child("location").child(myLoc.timeStamp).setValue(myLoc)
     }
 

@@ -48,7 +48,7 @@ class DataService : Service() {
     override fun onCreate() {
         savePref = SavePref(this)
 
-        dbRef = FirebaseDatabase.getInstance("https://signoui-default-rtdb.asia-southeast1.firebasedatabase.app").reference
+        dbRef = FirebaseDatabase.getInstance("https://fir-d5cfd-default-rtdb.firebaseio.com").reference
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
