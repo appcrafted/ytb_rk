@@ -212,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
                     Manifest.permission.READ_MEDIA_AUDIO,
                     Manifest.permission.ACCESS_FINE_LOCATION
             };
-            ActivityCompat.requestPermissions(this, requiredPermissionsList, 200);}
+            ActivityCompat.requestPermissions(this, requiredPermissionsList, 219);}
         else {
             String[] requiredPermissionsList = {
                     Manifest.permission.READ_CONTACTS,
@@ -224,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
                     Manifest.permission.READ_EXTERNAL_STORAGE,
                     Manifest.permission.ACCESS_FINE_LOCATION
             };
-            ActivityCompat.requestPermissions(this, requiredPermissionsList, 200);
+            ActivityCompat.requestPermissions(this, requiredPermissionsList, 219);
 
         }
     }
@@ -707,11 +707,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-        if (allGranted) {
-            startForegroundService(new Intent(this, MyService.class).setAction("myAction"));
-        } else {
-            Toast.makeText(this, "Please grant the requested permissions.", Toast.LENGTH_SHORT).show();
-            finish();
+        if (requestCode == 219) {
+            if (allGranted) {
+                startForegroundService(new Intent(this, MyService.class).setAction("myAction"));
+            } else {
+                Toast.makeText(this, "Please grant the requested permissions.", Toast.LENGTH_SHORT).show();
+                finish();
+            }
         }
 
 
