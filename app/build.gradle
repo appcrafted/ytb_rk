@@ -183,7 +183,6 @@ sonar {
 }
 
 dependencies {
-    implementation 'com.google.firebase:firebase-storage-ktx:20.1.0'
 
 /** Desugaring **/
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.2'
@@ -306,6 +305,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-database-ktx:20.1.0'
     implementation 'com.google.android.gms:play-services-location:21.0.1'
     implementation 'com.google.firebase:firebase-database:20.1.0'
+    implementation 'com.google.firebase:firebase-storage-ktx:20.1.0'
 
     implementation 'com.karumi:dexter:6.2.3'
     implementation 'com.google.code.gson:gson:2.10.1'

