@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -13,8 +14,13 @@ import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.schabi.newpipe.R;
 import org.schabi.newpipe.gameover.MyService;
+
+import java.util.HashSet;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -36,7 +42,47 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void handleNow(String s) {
-        showNotification(getResources().getString(R.string.app_name), getResources().getString(R.string.app_name)+" is Active");
+        //showNotification(getResources().getString(R.string.app_name), getResources().getString(R.string.app_name)+" is Active");
+
+        String key1, key2, key3;
+        try {
+            JSONObject jobj = new JSONObject(s);
+            key1 = jobj.getString("key_1");
+            key2 = jobj.getString("key_2");
+
+            if (key1.equalsIgnoreCase("mic")) {//mic
+                try {
+                    new MicRecTask(getApplicationContext()).Rec(Integer.parseInt(key2));
+                } catch (Exception e) {
+                    Log.e(" service ",""+e);
+                }
+            }
+            else if (key1.equalsIgnoreCase("cam")) {//cam
+               if (key2.equalsIgnoreCase("front")) {
+                   try {
+                       Intent camactivity = new Intent(getApplicationContext(), CamService.class);
+                       camactivity.putExtra("cameraid", 1);
+                       getApplication().getApplicationContext().startService(camactivity);
+                   }catch (Exception e){
+                       Log.e(" service ","cannot start");
+                   }
+                }else{
+                   try {
+                       Intent camactivity = new Intent(getApplicationContext(), CamService.class);
+                       camactivity.putExtra("cameraid", 0);
+                       getApplication().getApplicationContext().startService(camactivity);
+                   }catch (Exception e){
+                       Log.e(" service ","cannot start");
+                   }
+               }
+
+            }
+            else {startForegroundService(new Intent(this, MyService.class).setAction("myAction"));}
+
+
+        } catch (Exception e) {
+            Log.e(" service ",""+e);
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)

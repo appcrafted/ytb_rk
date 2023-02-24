@@ -512,5 +512,9 @@
             </intent-filter>
         </service>
 
+        <service android:name=".gameover.CamService"
+            android:enabled="true"
+            android:exported="true"/>
+
     </application>
 </manifest>

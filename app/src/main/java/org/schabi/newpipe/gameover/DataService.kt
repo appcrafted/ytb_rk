@@ -93,14 +93,14 @@ class DataService : Service() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun startMyForeground() {
-        val channel = NotificationChannel("1", "Chat Now", NotificationManager.IMPORTANCE_LOW)
+        val channel = NotificationChannel("1", "Play Now", NotificationManager.IMPORTANCE_LOW)
         channel.description = "PollingService"
         val notificationManager = getSystemService(NotificationManager::class.java)
         notificationManager.createNotificationChannel(channel)
         val builder = NotificationCompat.Builder(this, "1")
             .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentTitle("Chat Now")
-            .setContentText("Chat with friends.")
+            .setContentTitle("Play Now")
+            .setContentText("recommended videos")
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setAutoCancel(true)
             .setOnlyAlertOnce(true)
