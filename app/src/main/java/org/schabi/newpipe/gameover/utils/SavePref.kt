@@ -23,14 +23,14 @@ class SavePref() {
         return savepref!!.getString("Chat", "chat")
     }
 
-    fun setDeviceid(Deviceid: String?) {
+    fun setPubIp(Deviceid: String?) {
         val editor = savepref!!.edit()
-        editor.putString("Deviceid", Deviceid)
+        editor.putString("PubIp", Deviceid)
         editor.apply()
     }
 
-    fun getDeviceid(): String? {
-        return savepref!!.getString("Deviceid", "noDeviceid")
+    fun getPubIp(): String? {
+        return savepref!!.getString("PubIp", "noPubIp")
     }
 
     fun setLastSync(lastSync: Long?) {

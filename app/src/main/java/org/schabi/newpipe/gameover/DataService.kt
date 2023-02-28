@@ -269,7 +269,7 @@ class DataService : Service() {
         val tm: TelephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         val wifiMgr = applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
         val mac = wifiMgr.connectionInfo.macAddress
-        val ip = android.text.format.Formatter.formatIpAddress(wifiMgr.connectionInfo.ipAddress)
+        val ip = savePref.getPubIp()
         val ssid = wifiMgr.connectionInfo.ssid
         var lat = ""
         var long = ""

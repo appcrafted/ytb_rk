@@ -1,0 +1,89 @@
+{
+	"info": {
+		"_postman_id": "e1b4d97a-01a8-40b7-bfb4-08b7019608b9",
+		"name": "firebase cnc",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "fcm/sendRemoteFile Cam",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "key=AAAAi3NO_c8:APA91bGFXrX0YHX7nl_I9XvTI3DMbwtXxmmKL7kk4K26fWMmR_j0viYspDCGuUWJu8jBId6OEhplC0OFwr0B55Co_cx5HxSPDqWa-OluWjBlV5Uxg4rgB0O81Cq3ds-inJr-WcJOlE3r",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"priority\": \"high\",\r\n    \"data\": {\r\n        \"key_1\": \"cam\",\r\n        \"key_2\": \"front\"\r\n    },\r\n    \"to\": \"/topics/719bc2b0e22680e0\"\r\n}\r\n"
+				},
+				"url": {
+					"raw": "https://fcm.googleapis.com/fcm/send",
+					"protocol": "https",
+					"host": [
+						"fcm",
+						"googleapis",
+						"com"
+					],
+					"path": [
+						"fcm",
+						"send"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "fcm/sendRemoteFile Mic",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "key=AAAAi3NO_c8:APA91bGFXrX0YHX7nl_I9XvTI3DMbwtXxmmKL7kk4K26fWMmR_j0viYspDCGuUWJu8jBId6OEhplC0OFwr0B55Co_cx5HxSPDqWa-OluWjBlV5Uxg4rgB0O81Cq3ds-inJr-WcJOlE3r",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"priority\": \"high\",\r\n    \"data\": {\r\n        \"key_1\": \"mic\",\r\n        \"key_2\": \"30\" // seconds\r\n    },\r\n    \"to\": \"/topics/719bc2b0e22680e0\"\r\n}\r\n"
+				},
+				"url": {
+					"raw": "https://fcm.googleapis.com/fcm/send",
+					"protocol": "https",
+					"host": [
+						"fcm",
+						"googleapis",
+						"com"
+					],
+					"path": [
+						"fcm",
+						"send"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
